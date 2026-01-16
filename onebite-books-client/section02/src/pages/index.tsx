@@ -5,7 +5,18 @@ import style from "./index.module.css";
 import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
 
-export default function Home() {
+export const getServerSideProps = () => {
+  const data = "hello";
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+export default function Home({ data }: any) {
+  console.log(data);
   return (
     <div className={style.container}>
       <section>
