@@ -33,6 +33,13 @@ export const getStaticProps = async ( context : GetStaticPropsContext) => {
   // 단언을 해도 안전한 이유는 [id].tsx 규칙상 없을 수 없음
   const id = context.params!.id;
   const book = await fetchOneBook(Number(id));
+
+  if(!book) {
+    return {
+      notFound: true,
+    }
+  }
+
   return {
     props : {
       book,
