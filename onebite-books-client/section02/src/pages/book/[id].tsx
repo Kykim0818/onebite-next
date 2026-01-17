@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext, GetStaticPropsContext, InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import style from "./[id].module.css";
 import fetchOneBook from "@/lib/fetch-one-book";
+import { useRouter } from "next/router";
 
 const mockData = {
   id: 1,
@@ -24,7 +25,7 @@ export const getStaticPaths = () => {
     ],
     // fallback이 false라면 paths에 없는 id로 접속하면 404 (없는 페이지 취급)
     // 
-    fallback : false,
+    fallback : true,
   }
 }
 
@@ -40,6 +41,9 @@ export const getStaticProps = async ( context : GetStaticPropsContext) => {
 }
 
 export default function Page({ book }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  if(router.isFallback) return '로딩중...';
   if(!book) return '문제가 발생했습니다. 다시 시도하세요';
   const { id, title, subTitle, description, author, publisher, coverImgUrl } =
     book;
