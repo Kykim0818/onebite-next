@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { delay } from "@/util/delay";
 import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 
+async function AllBooks() {
   delay(3000);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
@@ -25,7 +26,7 @@ import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
   );
 }
 
-async function RecoBooks() {\
+async function RecoBooks() {
   delay(1500);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
