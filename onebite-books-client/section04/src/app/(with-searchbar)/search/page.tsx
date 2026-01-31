@@ -1,14 +1,10 @@
 import BookItem from "@/components/book-item";
 import { BookData } from "@/types";
+import { Suspense } from "react";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
-  const { q } = await searchParams;
+async function SearchResult({ q }: { q: string }) {
   const reponse = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q || ""}`,
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`,
     { cache: "force-cache" },
   );
   if (!reponse.ok) {
@@ -16,7 +12,6 @@ export default async function Page({
   }
 
   const books: BookData[] = await reponse.json();
-  console.log(books);
 
   return (
     <div>
@@ -24,5 +19,18 @@ export default async function Page({
         <BookItem key={book.id} {...book} />
       ))}
     </div>
+  );
+}
+
+export default function Page({
+  searchParams,
+}: {
+  // 이거 왜 Promise 타입에서 변경됫지?
+  searchParams: { q?: string };
+}) {
+  return (
+    <Suspense key={searchParams.q || ""} fallback={<div>Loading...</div>}>
+      <SearchResult q={searchParams.q || ""} />;
+    </Suspense>
   );
 }
