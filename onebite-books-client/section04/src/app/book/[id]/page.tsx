@@ -5,14 +5,9 @@ export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string | string[] }>;
-}) {
-  const { id } = await params;
+async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`,
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`,
   );
   if (!response.ok) {
     if (response.status === 404) {
@@ -24,7 +19,7 @@ export default async function Page({
   const { title, subTitle, description, author, publisher, coverImgUrl } = book;
 
   return (
-    <div className={style.container}>
+    <section>
       <div
         className={style.cover_img_container}
         style={{ backgroundImage: `url('${coverImgUrl}')` }}
@@ -37,6 +32,20 @@ export default async function Page({
         {author} | {publisher}
       </div>
       <div className={style.description}>{description}</div>
+    </section>
+  );
+}
+
+function ReviewEditor() {
+  return <div>editor</div>;
+}
+
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
+  return (
+    <div className={style.container}>
+      <BookDetail bookId={id} />;
+      <ReviewEditor />
     </div>
   );
 }
