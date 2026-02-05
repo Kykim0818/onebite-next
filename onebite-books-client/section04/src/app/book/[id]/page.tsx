@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
+import { createReviewAction } from "@/actions/create-review.action";
 
 export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }];
@@ -36,8 +37,17 @@ async function BookDetail({ bookId }: { bookId: string }) {
   );
 }
 
-function ReviewEditor() {
-  return <div>editor</div>;
+function ReviewEditor({ bookId }: { bookId: string }) {
+  return (
+    <section>
+      <form action={createReviewAction}>
+        <input name="bookId" value={bookId} hidden readOnly />
+        <input required name="content" placeholder="리뷰를 작성해 주세요." />
+        <input required name="author" placeholder="작성자 이름" />
+        <button type="submit">작성하기</button>
+      </form>
+    </section>
+  );
 }
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -45,7 +55,7 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <div className={style.container}>
       <BookDetail bookId={id} />;
-      <ReviewEditor />
+      <ReviewEditor bookId={id} />
     </div>
   );
 }
